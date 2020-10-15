@@ -1,0 +1,57 @@
+﻿DONE Class diagram - Add Get methods
+DONE Class diagram - Add Department field for Clothing
+DONE Class diagram - Add constructors
+DONE Class diagram - Amend data dictionary
+DONE Class diagram - change onShopFloor from boolean to string (it's more trouble than it's worth keeping it true/false then having to convert it to yes/no)
+DONE Class diagram - Employee now has an extra attribute for determining employee type
+DONE Table data dictionary - Change on_shop_floor from boolean to nvarchar(3) (SQL Server doesn't support boolean variables...)
+DONE Table data dictionary - Change price from double to decimal(5,2) (SQL Server doesn't support double variables...)
+DONE 12.3.3 - Barcode length set as 12 but needs to be 13, password length needs to be 500
+DONE Add user storyboard - Added a combo box to select manager type
+DONE Create storyboard for Audit form
+DONE Pseudocode - change "Add stock to location" step 6.2 "style number" should be "barcode".
+DONE Pseudocode - change "Logging in" step 4.3 "View stock" should be "Find stock". Add decryption steps too?
+DONE Pseudocode - when access is denied, keep user on current form, change step 1 as well
+DONE Pseudocode - Edit Stock - change search method to barcode only, add checks for quantity, after 5.1 numbering is wrong, 7.1 should be "using clothing id"
+DONE Pseudocode - View stock - change search method to barcode only, CHANGE LABEL TO TEXT BOX!
+DONE Pseudocode - Find stock - add search methods for style and SKU, add checks for location being null and item not existing at all
+DONE Pseudocode - Add user - add option for manager type.
+DONE Pseudocode - Auditing a user
+
+Challenges overcome:
+
+1.	Barcode scanner carriage return - message box automatically closed because barcode scanner was set up to do a carriage return (enter key) after scanning. 
+	This resulted in the message box having its OK button pressed immediately after scanning and so it would close instantly. 
+	Had to scan special barcodes on the scanner paperwork that would update the firmware not to process a carriage return.
+
+2.	Passing variables between forms - Stock view -> Stock Edit. Couldn't figure out how to get the clothing details on one form to pass over to another form without global variables.
+	Made a new constructor for StockEdit which allowed a clothing object to be passed in.
+
+3.	Changed some normal text boxes to masked text boxes.
+
+4.	Changed "On shop floor" text box to a radio button to sanitise input (but not for StockView as the radio button disabled font would make seeing whether Yes or No was selected).
+
+5.	Changed "Department" text box to drop down menu (not for StockView as there's not meant to be user input there)
+
+6.	Changed "Location" text box to drop down menu (not for StockView as there's not meant to be user input there)
+
+7.	Found code that stopped masked text box from defaulting to second index after input
+
+8.	Initially had code that would simulate a button click when the user pressed enter in a certain text box. Discovered the form has a property to designate what button should be clicked if the user hits the enter key.
+	This was primarily used on forms with one button as those forms have a very specified purpose and the enter key press would not be ambiguous in its purpose.
+
+9.	Initially set decimal precision in SQL Server to (3,2) and so it would only accept values 3 digits total (e.g. 7.99) but now it is (5,2) so can accept values like 17.99
+
+10.	Application crashed when trying to find location of an item with no location. Added try/catch to handle this.
+
+11.	Application would return a blank string when trying to find location of an item that didn't exist - added bool variable to handle this.
+
+12.	SQL statement wouldn't execute when adding a user. Reason being epe_type in employees table is 3 chars long "clg or mgr" and I was trying to add Colleague or Manager. If statement and set methods overcame this.
+
+13.	Had to change length of password column from varchar(20) to varchar(500) as an encrypted password is very long.
+
+14.	StockFind - one of the methods needed the ref keyword as a boolean variable wasn't changing value and so every item didn't "exist" according to the variable.
+
+15.	Logging in as manager - this would never work because the input parameter for SQLAddManager - Password column was only 20 chars long so the encrypted password would be cut off after the 20th character. Cryptography was throwing exceptions all over the place until the input parameter length was set higher (500).
+
+16. Changed stock updates table to include type of stock update i.e. stock add or stock edit.
